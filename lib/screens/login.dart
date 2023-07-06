@@ -30,10 +30,9 @@ class LoginScreenState extends State<LoginScreen> {
         appState?.setLoggedIn(token.accessToken);
       } catch (e) {
         final error = e.toString();
-        final msg = error.substring(0, error.indexOf('(OS Error'));
 
         final snackBar = SnackBar(
-          content: Text('Error logging in: $msg'),
+          content: Text('Error logging in: $error'),
           action: SnackBarAction(
             label: 'Close',
             onPressed: () {

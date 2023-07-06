@@ -1,6 +1,7 @@
 import 'package:camera_events/screens/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'screens/startpage.dart';
 import 'screens/login.dart';
 
@@ -26,11 +27,18 @@ class MyAppState extends State<MyApp> {
     _loadToken();
   }
 
-  //Loading counter value on start
+  //Loading stored token value on start
   Future<void> _loadToken() async {
     final prefs = await SharedPreferences.getInstance();
+
+    //evaluate if jwt token is valid
+    token = prefs.getString('token') ?? '';
+    if (token.isEmpty || JwtDecoder.isExpired(token)) {
+      prefs.remove('token');
+      token = '';
+    }
+
     setState(() {
-      token = (prefs.getString('token') ?? '');
       loadingApp = false;
     });
   }
@@ -49,7 +57,6 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget selectHome() {
       if (loadingApp) {
         return const Loading();
@@ -57,7 +64,7 @@ class MyAppState extends State<MyApp> {
       if (token.isNotEmpty) {
         return const StartPage();
       }
-      return const LoginScreen(); 
+      return const LoginScreen();
     }
 
     return MaterialApp(
