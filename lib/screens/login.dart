@@ -29,11 +29,23 @@ class LoginScreenState extends State<LoginScreen> {
             .login(emailEditingController.text, passwordEditingController.text);
         appState?.setLoggedIn(token.accessToken);
       } catch (e) {
-        // TODO: else display error message snackbar?
+        final error = e.toString();
+        final msg = error.substring(0, error.indexOf('(OS Error'));
+
+        final snackBar = SnackBar(
+          content: Text('Error logging in: $msg'),
+          action: SnackBarAction(
+            label: 'Close',
+            onPressed: () {
+              // no action needed
+            },
+          ),
+        );
+
+        // Find the ScaffoldMessenger in the widget tree
+        // and use it to show a SnackBar.
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-
-      
-
       loading = false;
     }
 
@@ -44,14 +56,11 @@ class LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: <Widget>[
               const Padding(
-                padding: EdgeInsets.only(top: 60.0),
+                padding: EdgeInsets.only(top: 60.0, bottom: 20.0),
                 child: Center(
                   child: SizedBox(
-                      width: 200,
-                      height: 150,
-                      /*decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(50.0)),*/
+                    width: 200,
+                    height: 150,
                     child: Image(
                       image: AssetImage('lib/assets/cctv.webp'),
                       fit: BoxFit.fill,
@@ -60,7 +69,6 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Padding(
-                //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: SizedBox(
                   width: 300,
@@ -95,6 +103,7 @@ class LoginScreenState extends State<LoginScreen> {
               MaterialButton(
                 onPressed: () {
                   //TODO FORGOT PASSWORD SCREEN GOES HERE
+
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (_) => const LoginScreen())
                   //     );
@@ -108,7 +117,8 @@ class LoginScreenState extends State<LoginScreen> {
                 height: 50,
                 width: 250,
                 decoration: BoxDecoration(
-                    color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
                 child: MaterialButton(
                   onPressed: () {
                     processLogin();
@@ -121,10 +131,11 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                 ),
               ),
-              const SizedBox(
-                height: 130,
+
+              const Text(
+                'New User? Create Account',
+                style: TextStyle(fontSize: 15, color: Colors.black),
               ),
-              const Text('New User? Create Account')
             ],
           ),
         ),
