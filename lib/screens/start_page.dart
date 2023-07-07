@@ -1,7 +1,4 @@
-import 'package:camera_events/state/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../components/drawer.dart';
 import 'event_page.dart';
 
