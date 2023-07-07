@@ -27,19 +27,19 @@ class _StartPageState extends State<StartPage> {
   Future<void> getEvents(String token) async {
     events = await EventService().getEvents(token);
     isLoading = false;
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+
+    return Scaffold(
+        appBar: AppBar(title: const Text('Events')),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : EventList(events: events!)
       );
-    }
-    return EventList(events: events!);
-        
-      
   }
 }
 

@@ -18,39 +18,25 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var date = DateTime.fromMillisecondsSinceEpoch(startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
-
     Uint8List bytesImage = const Base64Decoder().convert(thumbnail!);
 
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Image.memory(
-            bytesImage,
-            width: 200,
-            height: 100,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                convertedDate,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+    return Center(
+      child: Card(
+        margin: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Image.memory(
+                bytesImage,
+                width: 200,
+                height: 100,
               ),
-              const SizedBox(height: 8),
-              Text(
-                camera,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ],
+              title: Text(convertedDate),
+              subtitle: Text(camera),
+            ),
+          ],
+        ),
       ),
     );
   }
