@@ -66,4 +66,12 @@ class AppState extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    token = '';
+
+    notifyListeners();
+  }
 }

@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
                     height: 150,
                     child: Image(
                       image: AssetImage('lib/assets/cctv.webp'),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
                 ),
@@ -62,6 +62,13 @@ class LoginScreen extends StatelessWidget {
                         labelText: 'Password',
                         hintText: 'Enter secure password'),
                     keyboardType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.go,
+                    onFieldSubmitted: (value) {
+                      appState.processLogin(
+                          context,
+                          emailEditingController.text,
+                          passwordEditingController.text);
+                    },
                   ),
                 ),
               ),
