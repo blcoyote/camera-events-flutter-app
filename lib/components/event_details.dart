@@ -1,6 +1,9 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/event.model.dart';
+import '../state/event_state.dart';
 
 class EventDetails extends StatelessWidget {
   final EventModel event;
@@ -9,48 +12,69 @@ class EventDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final eventState = context.watch<EventState>();
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(convertedDate),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              event.camera,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+    Future<Uint8List> image = eventState.getSnapshot(event.id);
+
+    return FutureBuilder<Uint8List>(
+      future: image,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(
+              leading: BackButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text(convertedDate),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Camera: ${event.camera}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Event ID: ${event.id}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    'Object detection label: ${event.label}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Snapshot:',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Image.memory(snapshot.data!),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              event.id,
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              event.label,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

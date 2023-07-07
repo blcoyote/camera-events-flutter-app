@@ -1,6 +1,7 @@
 import 'package:camera_events/screens/loading.dart';
 import 'package:camera_events/screens/start_page.dart';
 import 'package:camera_events/state/event_state.dart';
+import 'package:camera_events/state/websockets_state.dart';
 import 'package:flutter/material.dart';
 import 'screens/event_page.dart';
 import 'screens/login.dart';
@@ -26,7 +27,12 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 EventState(Provider.of<AppState>(context, listen: false)),
             update: (context, appState, eventState) => EventState(appState),
-          )
+        ),
+        ChangeNotifierProxyProvider<AppState, WebsocketState>(
+          create: (context) =>
+              WebsocketState(Provider.of<AppState>(context, listen: false)),
+          update: (context, appState, eventState) => WebsocketState(appState),
+        )
         ],
       child: Consumer<AppState>(
         builder: (context, state, child) {

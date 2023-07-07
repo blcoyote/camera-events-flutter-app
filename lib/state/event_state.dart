@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:camera_events/state/app_state.dart';
 import 'package:flutter/material.dart';
 import '../models/event.model.dart';
@@ -12,6 +13,7 @@ class EventState extends ChangeNotifier {
   bool isEventsError = false;
   String eventsErrorMessage = '';
   List<EventModel> events = <EventModel>[];
+  bool isEventDetailImageLoading = false;
 
   EventState(AppState of) {
     token = of.token;
@@ -32,5 +34,18 @@ class EventState extends ChangeNotifier {
     isEventsLoading = false;
 
     notifyListeners();
+  }
+
+  Future<Uint8List> getSnapshot(String eventId) async {
+    isEventDetailImageLoading = true;
+    try {
+      var image = await EventService().getSnapshot(token, eventId);
+      return image;
+    } catch (e) {
+      print(e);
+    } finally {
+      isEventDetailImageLoading = false;
+    }
+    throw Exception('Failed to load snapshot');
   }
 }

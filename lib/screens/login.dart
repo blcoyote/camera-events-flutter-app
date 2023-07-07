@@ -66,8 +66,8 @@ class LoginScreen extends StatelessWidget {
                     onFieldSubmitted: (value) {
                       appState.processLogin(
                           context,
-                          emailEditingController.text,
-                          passwordEditingController.text);
+                          emailEditingController.text.trim(),
+                          passwordEditingController.text.trim());
                     },
                   ),
                 ),
@@ -93,8 +93,10 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: MaterialButton(
                   onPressed: () {
-                    appState.processLogin(context, emailEditingController.text,
-                        passwordEditingController.text);
+                    appState.processLogin(
+                        context,
+                        emailEditingController.text.trim(),
+                        passwordEditingController.text.trim());
                   },
                   child: appState.loggingIn
                       ? const CircularProgressIndicator()

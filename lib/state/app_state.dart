@@ -1,5 +1,7 @@
+import 'package:camera_events/services/notifications.dart';
 import 'package:camera_events/services/user_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/token.model.dart';
@@ -9,9 +11,14 @@ class AppState extends ChangeNotifier {
   String token = '';
   bool loadingApp = true;
   bool loggingIn = false;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
 
   AppState() {
     loadSettings();
+    Notifications.initialize(flutterLocalNotificationsPlugin);
+
   }
 
   Future<void> loadSettings() async {

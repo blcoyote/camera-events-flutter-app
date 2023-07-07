@@ -12,6 +12,6 @@ class StartPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Events')),
       body: const EventPage(),
       drawer: buildDrawer(context),
-    );    
+    );
   }
 }

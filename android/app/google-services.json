@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "248133674895",
+    "project_id": "camera-events-f329e",
+    "storage_bucket": "camera-events-f329e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248133674895:android:423354cdd4df3ff3e98dfa",
+        "android_client_info": {
+          "package_name": "com.elcoyote.cameraevents"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248133674895-on85citqali4hkt95kp2rqbhjsfeal43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQuDIv3t-KBlxgtgrSRJ07u1gf_ta_gD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248133674895-on85citqali4hkt95kp2rqbhjsfeal43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
