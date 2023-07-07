@@ -1,52 +1,18 @@
-import 'package:camera_events/models/token.model.dart';
-import 'package:camera_events/services/api_wrapper.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:provider/provider.dart';
+import '../state/app_state.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  LoginScreenState createState() => LoginScreenState();
-}
-
-class LoginScreenState extends State<LoginScreen> {
-  @override
   Widget build(BuildContext context) {
-    var appState = context.findAncestorStateOfType<MyAppState>();
-    bool loading = false;
+    final appState = context.watch<AppState>();
+
     final TextEditingController passwordEditingController =
         TextEditingController();
     final TextEditingController emailEditingController =
         TextEditingController();
-
-    Future<void> processLogin() async {
-      loading = true;
-
-      // do api check and if successful. set token and
-      try {
-        TokenModel token = await ApiService()
-            .login(emailEditingController.text, passwordEditingController.text);
-        appState?.setLoggedIn(token.accessToken);
-      } catch (e) {
-        final error = e.toString();
-
-        final snackBar = SnackBar(
-          content: Text('Error logging in: $error'),
-          action: SnackBarAction(
-            label: 'Close',
-            onPressed: () {
-              // no action needed
-            },
-          ),
-        );
-
-        // Find the ScaffoldMessenger in the widget tree
-        // and use it to show a SnackBar.
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      loading = false;
-    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -120,9 +86,10 @@ class LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(20)),
                 child: MaterialButton(
                   onPressed: () {
-                    processLogin();
+                    appState.processLogin(context, emailEditingController.text,
+                        passwordEditingController.text);
                   },
-                  child: loading
+                  child: appState.loggingIn
                       ? const CircularProgressIndicator()
                       : const Text(
                           'Login',

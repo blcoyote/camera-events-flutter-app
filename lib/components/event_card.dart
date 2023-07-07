@@ -23,18 +23,19 @@ class EventCard extends StatelessWidget {
     return Center(
       key: UniqueKey(),
       child: Card(
-        margin: const EdgeInsets.all(8),
+        margin: const EdgeInsets.all(4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
               leading: Image.memory(
                 bytesImage,
-                width: 200,
-                height: 100,
               ),
               title: Text(convertedDate),
               subtitle: Text('camera: $camera'),
+              onTap: () {
+                print('push new screen to navigation stack');
+              },
             ),
           ],
         ),

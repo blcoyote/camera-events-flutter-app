@@ -1,4 +1,4 @@
-import 'package:camera_events/utilities.dart';
+import 'package:camera_events/utils/url_formatter.dart';
 import 'package:http/http.dart' as http;
 import '../app_config.dart';
 import 'dart:developer';
