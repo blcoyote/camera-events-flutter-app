@@ -5,7 +5,7 @@ import '../models/event.model.dart';
 class EventDetails extends StatelessWidget {
   final EventModel event;
 
-  EventDetails({required this.event});
+  const EventDetails({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
