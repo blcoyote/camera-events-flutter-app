@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
-class EventCard extends StatelessWidget {
-  final String camera;
-  final int startTime;
-  final String? thumbnail;
+import '../models/event.model.dart';
+import 'event_details.dart';
 
-  const EventCard(
-      {super.key,
-      required this.camera,
-      required this.startTime,
-      required this.thumbnail});
+class EventCard extends StatelessWidget {
+  final EventModel event;
+
+  const EventCard({
+    super.key,
+    required this.event,
+  });
 
   @override
   Widget build(BuildContext context) {
-    var date = DateTime.fromMillisecondsSinceEpoch(startTime * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
-    Uint8List bytesImage = const Base64Decoder().convert(thumbnail!);
+    Uint8List bytesImage = const Base64Decoder().convert(event.thumbnail!);
 
     return Center(
       key: UniqueKey(),
@@ -32,9 +32,12 @@ class EventCard extends StatelessWidget {
                 bytesImage,
               ),
               title: Text(convertedDate),
-              subtitle: Text('camera: $camera'),
+              subtitle: Text('camera: ${event.camera}'),
               onTap: () {
-                print('push new screen to navigation stack');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EventDetails(event: event)));
               },
             ),
           ],

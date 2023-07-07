@@ -25,9 +25,7 @@ class EventPage extends StatelessWidget {
             itemCount: appState.events.length,
             itemBuilder: (context, index) {
               return EventCard(
-                camera: appState.events[index].camera,
-                startTime: appState.events[index].startTime,
-                thumbnail: appState.events[index].thumbnail,
+                event: appState.events[index],
               );
             },
           );
