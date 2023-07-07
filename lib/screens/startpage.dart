@@ -1,6 +1,5 @@
-import 'package:camera_events/screens/eventlist.dart';
 import 'package:flutter/material.dart';
-
+import '../components/event_card.dart';
 import '../models/event.model.dart';
 import '../services/event_api.dart';
 
@@ -12,6 +11,7 @@ class StartPage extends StatefulWidget {
 
   @override
   _StartPageState createState() => _StartPageState();
+
 }
 
 class _StartPageState extends State<StartPage> {
@@ -25,8 +25,12 @@ class _StartPageState extends State<StartPage> {
   }
 
   Future<void> getEvents(String token) async {
-    events = await EventService().getEvents(token);
-    isLoading = false;
+    var eventsRequest = await EventService().getEvents(token);
+
+    setState(() {
+      events = eventsRequest;
+      isLoading = false;
+    });
   }
 
   @override
@@ -38,8 +42,16 @@ class _StartPageState extends State<StartPage> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : EventList(events: events!)
-      );
+            : ListView.builder(
+                itemCount: events!.length,
+                itemBuilder: (context, index) {
+                  return EventCard(
+                    camera: events![index].camera,
+                    startTime: events![index].startTime,
+                    thumbnail: events![index].thumbnail,
+                  );
+                },
+              ));
   }
 }
 

@@ -21,6 +21,7 @@ class EventCard extends StatelessWidget {
     Uint8List bytesImage = const Base64Decoder().convert(thumbnail!);
 
     return Center(
+      key: UniqueKey(),
       child: Card(
         margin: const EdgeInsets.all(8),
         child: Column(
@@ -33,7 +34,7 @@ class EventCard extends StatelessWidget {
                 height: 100,
               ),
               title: Text(convertedDate),
-              subtitle: Text(camera),
+              subtitle: Text('camera: $camera'),
             ),
           ],
         ),

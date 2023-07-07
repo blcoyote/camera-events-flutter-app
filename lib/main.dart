@@ -32,13 +32,14 @@ class MyAppState extends State<MyApp> {
     final prefs = await SharedPreferences.getInstance();
 
     //evaluate if jwt token is valid
-    token = prefs.getString('token') ?? '';
+    var token = prefs.getString('token') ?? '';
     if (token.isEmpty || JwtDecoder.isExpired(token)) {
       prefs.remove('token');
       token = '';
     }
 
     setState(() {
+      this.token = token;
       loadingApp = false;
     });
   }

@@ -3,11 +3,12 @@ import 'package:http/http.dart' as http;
 import '../app_config.dart';
 import 'dart:developer';
 import '../models/user.model.dart';
+import '../utilities.dart';
 
 class ApiService {
   Future<List<UserModel>?> getUsers() async {
     try {
-      var url = Uri.parse(AppConfig.baseUrl + AppConfig.usersEndpoint);
+      var url = urlFormatter(AppConfig.baseUrl, AppConfig.usersEndpoint);
       var response = await http.get(url);
       if (response.statusCode == 200) {
         List<UserModel> model = userModelFromJson(response.body);
@@ -30,7 +31,7 @@ class ApiService {
         'password': password,
       };
       try {
-        var url = Uri.parse(AppConfig.baseUrl + AppConfig.loginEndpoint);
+      var url = urlFormatter(AppConfig.baseUrl, AppConfig.loginEndpoint);
         var response = await http.post(url, headers: headerList, body: body);
         if (response.statusCode == 200) {
           TokenModel token = tokenModelFromJson(response.body);
