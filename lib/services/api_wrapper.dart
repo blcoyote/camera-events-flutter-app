@@ -13,13 +13,12 @@ class ApiService {
         List<UserModel> model = userModelFromJson(response.body);
         return model;
       }
-      //TODO: Custom Exception type
+      //TODO: Custom Exception type?
       throw Exception('Failed to load users, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
       log(e.toString());
       rethrow;
     }
-  
   }
     Future<TokenModel> login(String username, String password) async {
       const headerList = <String, String>{

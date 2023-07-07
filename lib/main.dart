@@ -1,8 +1,8 @@
 import 'package:camera_events/screens/loading.dart';
+import 'package:camera_events/screens/startpage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'screens/startpage.dart';
 import 'screens/login.dart';
 
 void main() {
@@ -62,7 +62,9 @@ class MyAppState extends State<MyApp> {
         return const Loading();
       }
       if (token.isNotEmpty) {
-        return const StartPage();
+        return StartPage(
+          token: token,
+        );
       }
       return const LoginScreen();
     }

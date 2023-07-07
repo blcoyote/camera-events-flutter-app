@@ -1,38 +1,45 @@
+import 'package:camera_events/screens/eventlist.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+
+import '../models/event.model.dart';
+import '../services/event_api.dart';
+
 
 class StartPage extends StatefulWidget {
-  const StartPage({super.key});
+  final String token;
+
+  const StartPage({required this.token});
 
   @override
-  MyScreenState createState() => MyScreenState();
+  _StartPageState createState() => _StartPageState();
 }
 
-class MyScreenState extends State<StartPage> {
+class _StartPageState extends State<StartPage> {
+  List<EventModel>? events = <EventModel>[];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getEvents(widget.token);
+  }
+
+  Future<void> getEvents(String token) async {
+    events = await EventService().getEvents(token);
+    isLoading = false;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    var appState = context.findAncestorStateOfType<MyAppState>();
-
-    void logout() {
-      appState?.setLoggedIn('');
-    }
-    
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Screen'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text('Hello, World!'),
-            const SizedBox(height: 10),
-            MaterialButton(
-              onPressed: () {
-                logout();
-              },
-            child: const Text('Logout'))
-          ]),
-        ),
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
       );
+    }
+    return EventList(events: events!);
+        
+      
   }
 }
+
