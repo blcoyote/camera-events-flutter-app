@@ -1,5 +1,5 @@
 import 'package:camera_events/screens/loading.dart';
-import 'package:camera_events/screens/startpage.dart';
+import 'package:camera_events/screens/start_page.dart';
 import 'package:camera_events/state/event_state.dart';
 import 'package:flutter/material.dart';
 import 'screens/login.dart';
