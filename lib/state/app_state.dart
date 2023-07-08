@@ -15,10 +15,11 @@ class AppState extends ChangeNotifier {
       FlutterLocalNotificationsPlugin();
 
 
+
   AppState() {
     loadSettings();
     Notifications.initialize(flutterLocalNotificationsPlugin);
-
+    
   }
 
   Future<void> loadSettings() async {
@@ -78,6 +79,13 @@ class AppState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     token = '';
+
+    notifyListeners();
+  }
+
+  Future<void> sendNotification(String title, String body) async {
+    await Notifications.showNotification(
+        flutterLocalNotificationsPlugin, title, body);
 
     notifyListeners();
   }

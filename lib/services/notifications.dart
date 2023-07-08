@@ -14,4 +14,22 @@ class Notifications {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
   }
+
+
+  static Future showNotification(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+      String title,
+      String body) async {
+    var androidPlatformChannelSpecifics =
+        const AndroidNotificationDetails('camera_events', 'Camera events',
+            channelDescription: 'Camera event notifications',
+            playSound: true,
+            //sound: RawResourceAndroidNotificationSound('notification'),
+            importance: Importance.max,
+            priority: Priority.high);
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, title, body, platformChannelSpecifics);
+  }
 }
