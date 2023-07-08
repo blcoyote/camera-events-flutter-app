@@ -8,18 +8,27 @@ import '../models/token.model.dart';
 
 class AppState extends ChangeNotifier {
   // Basic state for the app
-  String token = '';
+  String _token = '';
   bool loadingApp = true;
   bool loggingIn = false;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  String get token {
+    if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
+      logout();
+    }
+    return _token;
+  }
 
+  set token(String value) {
+    _token = value;
+    notifyListeners();
+  }
 
   AppState() {
     loadSettings();
     Notifications.initialize(flutterLocalNotificationsPlugin);
-    
   }
 
   Future<void> loadSettings() async {
