@@ -11,23 +11,25 @@ class EventPage extends StatelessWidget {
     final appState = context.watch<EventState>();
 
     if (appState.events.isEmpty &&
-        !appState.isEventsLoading &&
-        !appState.isEventsError) {
+        !appState.isEventsLoading) {
       appState.getEvents();
     }
 
-    return appState.isEventsLoading
-        ? const Center(
-            //TODO: this could be better
-            child: CircularProgressIndicator(),
-          )
-        : ListView.builder(
-            itemCount: appState.events.length,
-            itemBuilder: (context, index) {
-              return EventCard(
-                event: appState.events[index],
-              );
-            },
-          );
+    return RefreshIndicator(
+      onRefresh: () => appState.getEvents(),
+      child: appState.isEventsLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemCount: appState.events.length,
+              itemBuilder: (context, index) {
+                return EventCard(
+                  event: appState.events[index],
+                );
+              },
+            ),
+
+    );
   }
 }
