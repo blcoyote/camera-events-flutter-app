@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:248133674895:android:423354cdd4df3ff3e98dfa",
+        "mobilesdk_app_id": "1:248133674895:android:b85f291869601dc1e98dfa",
         "android_client_info": {
           "package_name": "com.elcoyote.cameraevents"
         }
@@ -29,6 +29,13 @@
             {
               "client_id": "248133674895-on85citqali4hkt95kp2rqbhjsfeal43.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "248133674895-2f4eicl8efgjva3e5ecj0mh3rf06kfqg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cameraEvents"
+              }
             }
           ]
         }
