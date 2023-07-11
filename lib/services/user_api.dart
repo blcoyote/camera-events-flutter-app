@@ -47,4 +47,24 @@ class UserService {
       rethrow;
     }
   }
+
+  Future<void> registerFcmToken(String fcmToken, String Usertoken) async {
+    final headerList = <String, String>{
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $Usertoken'
+    };
+    var params = {'token': fcmToken};
+    try {
+      var url = urlFormatter(AppConfig.baseUrl, '/fcm', params);
+      var response = await http.post(url, headers: headerList);
+
+      //TODO: Custom Exception type?
+      throw Exception(
+          'Failed to register token: ${response.statusCode}, ${response.body}');
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

@@ -21,7 +21,8 @@ class Notifications {
       String title,
       String body) async {
     var androidPlatformChannelSpecifics =
-        const AndroidNotificationDetails('camera_events', 'Camera events',
+        const AndroidNotificationDetails(
+        'high_importance_channel', 'Camera Events',
             channelDescription: 'Camera event notifications',
             playSound: true,
             //sound: RawResourceAndroidNotificationSound('notification'),

@@ -34,7 +34,7 @@
               "client_id": "248133674895-2f4eicl8efgjva3e5ecj0mh3rf06kfqg.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.cameraEvents"
+                "bundle_id": "com.elcoyote.cameraevents"
               }
             }
           ]

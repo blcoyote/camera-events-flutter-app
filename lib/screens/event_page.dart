@@ -15,7 +15,9 @@ class EventPage extends StatelessWidget {
       appState.getEvents();
     }
 
-    return RefreshIndicator(
+    return Scaffold(
+        appBar: AppBar(title: const Text('Events')),
+        body: RefreshIndicator(
       onRefresh: () => appState.getEvents(),
       child: appState.isEventsLoading
           ? const Center(
@@ -30,6 +32,6 @@ class EventPage extends StatelessWidget {
               },
             ),
 
-    );
+        ));
   }
 }
