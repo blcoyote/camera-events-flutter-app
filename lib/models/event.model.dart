@@ -27,7 +27,7 @@ class EventModel {
 
   final String id;
   final String? area;
-  final String? box;
+  final List<int>? box;
   final String camera;
   final int? endTime;
   final int startTime;
@@ -37,7 +37,7 @@ class EventModel {
   final String label;
   final String? plusId;
   final String? ratio;
-  final String? region;
+  final List<int>? region;
   final bool retainIndefinitely;
   final String? subLabel;
   final String? thumbnail;

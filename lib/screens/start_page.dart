@@ -46,15 +46,21 @@ class _StartPageState extends State<StartPage> {
     final appState = context.watch<AppState>();
     
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Camera Events')),
-      body: appState.loadingApp
-          ? const Loading()
-          : appState.token.isEmpty
-              ? const LoginScreen()
-              : const EventPage(),
-      drawer: buildDrawer(context),
-      
+    return Builder(builder: (context) {
+      if (appState.loadingApp) {
+        return const Loading();
+      }
+      if (appState.token.isEmpty) {
+        return const LoginScreen();
+      }
+
+      return Scaffold(
+        appBar: AppBar(title: const Text('Camera Events')),
+        body: const EventPage(),
+        drawer: buildDrawer(context),
+          
+      );
+    }
     );
   }
 }

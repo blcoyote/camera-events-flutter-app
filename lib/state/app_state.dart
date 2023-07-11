@@ -104,6 +104,7 @@ class AppState extends ChangeNotifier {
     try {
       TokenModel token = await UserService().login(username, password);
       setToken(token.accessToken);
+    
     } catch (e) {
       final error = e.toString();
 

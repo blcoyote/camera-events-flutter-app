@@ -1,3 +1,4 @@
+import 'package:camera_events/screens/start_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
@@ -25,6 +26,10 @@ Drawer buildDrawer(BuildContext context) {
           title: const Text('Logout'),
           onTap: () {
             appState.logout();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const StartPage()),
+            );
           },
         ),
       ],
