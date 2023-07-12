@@ -6,7 +6,7 @@ import 'dart:developer';
 import '../models/event.model.dart';
 
 class EventService {
-  Future<List<EventModel>?> getEvents(String token,
+  Future<List<EventModel>>? getEvents(String token,
       [CameraEventQueryParams? queryParams]) async {
     final headerList = <String, String>{
       'accept': 'application/json',
@@ -49,8 +49,9 @@ class EventService {
       var response = await http.get(uri, headers: headerList);
 
       if (response.statusCode == 200) {
-        List<EventModel> model = eventModelFromJson(response.body);
-        return model[0];
+        EventModel model = eventModelFromJsonSingle(response.body);
+
+        return model;
       }
       throw Exception(
           'Failed to load events, status code: ${response.statusCode}, ${response.body}');

@@ -2,6 +2,9 @@ import 'dart:convert';
 
 List<EventModel> eventModelFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
+    
+EventModel eventModelFromJsonSingle(String str) =>
+    EventModel.fromJson(json.decode(str));
 
 class EventModel {
   EventModel({
@@ -26,8 +29,8 @@ class EventModel {
   });
 
   final String id;
-  final String? area;
-  final List<int>? box;
+  final int? area;
+  final List<dynamic>? box;
   final String camera;
   final int? endTime;
   final int startTime;
@@ -37,7 +40,7 @@ class EventModel {
   final String label;
   final String? plusId;
   final String? ratio;
-  final List<int>? region;
+  final List<dynamic>? region;
   final bool retainIndefinitely;
   final String? subLabel;
   final String? thumbnail;

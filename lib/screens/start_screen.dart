@@ -3,29 +3,24 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../components/drawer.dart';
-import 'event_page.dart';
+import 'event_screen.dart';
 import 'loading.dart';
-import 'login.dart';
+import 'login_screen.dart';
 
-class StartPage extends StatefulWidget {
-  const StartPage({super.key});
-
+class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
+  static const routeName = '/StartScreen';
   @override
-  State<StartPage> createState() => _StartPageState();
+  State<StartScreen> createState() => _StartScreenState();
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
-
   navigatorKey.currentState?.pushReplacementNamed(message.data['path']);
-  print("Handling a background message: ${message.messageId}");
 }
 
-class _StartPageState extends State<StartPage> {
+class _StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -36,16 +31,12 @@ class _StartPageState extends State<StartPage> {
             arguments: event.data['id']);
       }
     });
-
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    
-
     return Builder(builder: (context) {
       if (appState.loadingApp) {
         return const Loading();
@@ -53,16 +44,7 @@ class _StartPageState extends State<StartPage> {
       if (appState.token.isEmpty) {
         return const LoginScreen();
       }
-
-      return Scaffold(
-        appBar: AppBar(title: const Text('Camera Events')),
-        body: const EventPage(),
-        drawer: buildDrawer(context),
-          
-      );
-    }
-    );
+      return const EventScreen();
+    });
   }
 }
-
-

@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:camera_events/models/event.model.dart';
 import 'package:camera_events/services/notifications.dart';
 import 'package:camera_events/services/user_api.dart';
@@ -8,10 +11,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/token.model.dart';
+import '../services/event_api.dart';
 
 class AppState extends ChangeNotifier {
   // Basic state for the app
   String _token = '';
+  String username = '';
+  String refreshToken = '';
   bool loadingApp = true;
   bool loggingIn = false;
 
@@ -21,6 +27,15 @@ class AppState extends ChangeNotifier {
   late String fcmToken;
   UserService userService = UserService();
 
+
+  bool isEventsLoading = false;
+  bool isEventsError = false;
+  String eventsErrorMessage = '';
+  List<EventModel> events = <EventModel>[];
+  bool isEventDetailImageLoading = false;
+  bool hasEventsLoaded = false;
+  EventService eventService = EventService();
+
   late NotificationSettings settings;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -29,7 +44,7 @@ class AppState extends ChangeNotifier {
 
   String get token {
     if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
-      logout();
+      _token = '';
     }
     return _token;
   }
@@ -60,7 +75,6 @@ class AppState extends ChangeNotifier {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // Parse the message received
-
       //_totalNotifications++;
       notifyListeners();
     });
@@ -78,20 +92,28 @@ class AppState extends ChangeNotifier {
 
     //evaluate if jwt token is valid
     var token = prefs.getString('token') ?? '';
+    refreshToken = prefs.getString('refreshToken') ?? '';
+    username = prefs.getString('username') ?? '';
     if (token.isEmpty || JwtDecoder.isExpired(token)) {
       prefs.remove('token');
       token = '';
     }
     this.token = token;
+
+    if (token.isEmpty || refreshToken.isNotEmpty) {
+      await processSilentLogin(username, refreshToken);
+    }
     loadingApp = false;
 
     notifyListeners();
   }
 
-  Future<void> setToken(String token) async {
+  Future<void> setToken(String token, String refreshToken) async {
     final prefs = await SharedPreferences.getInstance();
     this.token = token;
+    this.refreshToken = refreshToken;
     prefs.setString('token', token);
+    prefs.setString('refreshToken', refreshToken);
 
     notifyListeners();
   }
@@ -99,12 +121,14 @@ class AppState extends ChangeNotifier {
   Future<void> processLogin(
       BuildContext context, String username, String password) async {
     loggingIn = true;
-
+    
     // do api check and if successful. set token and
     try {
+      final prefs = await SharedPreferences.getInstance();
       TokenModel token = await UserService().login(username, password);
-      setToken(token.accessToken);
-    
+      setToken(token.accessToken, token.refreshToken);
+      username = username;
+      prefs.setString('username', username);
     } catch (e) {
       final error = e.toString();
 
@@ -127,18 +151,61 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
-    token = '';
+  Future<void> processSilentLogin(String username, String refreshToken) async {
+    try {
+      TokenModel token = await UserService().refresh(username, refreshToken);
+      setToken(token.accessToken, token.refreshToken);
+    } catch (e) {
+      await logout();
+    }
 
+    loggingIn = false;
+    getFcmToken();
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    setToken('', '');
     notifyListeners();
   }
 
   Future<void> sendNotification(String title, String body) async {
     await Notifications.showNotification(
         flutterLocalNotificationsPlugin, title, body);
-
     notifyListeners();
+  }
+
+  Future<void> getEvents({bool forceRefresh = false}) async {
+    if (forceRefresh || !hasEventsLoaded) {
+      isEventsLoading = true;
+      try {
+        var eventsRequest = await eventService.getEvents(token);
+        if (eventsRequest == null) {
+          throw Exception(eventsErrorMessage);
+        }
+        events = eventsRequest;
+      } catch (e) {
+        isEventsError = true;
+        eventsErrorMessage = e.toString();
+      } finally {
+        isEventsLoading = false;
+        hasEventsLoaded = true;
+
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<Uint8List> getSnapshot(String eventId) async {
+    isEventDetailImageLoading = true;
+    try {
+      var image = await EventService().getSnapshot(token, eventId);
+      return image;
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isEventDetailImageLoading = false;
+    }
+    throw Exception('Failed to load snapshot');
   }
 }

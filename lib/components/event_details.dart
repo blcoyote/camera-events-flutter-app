@@ -1,9 +1,10 @@
 import 'dart:typed_data';
+import 'package:camera_events/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/event.model.dart';
-import '../state/event_state.dart';
+import '../screens/event_screen.dart';
 
 class EventDetails extends StatelessWidget {
   final EventModel event;
@@ -12,11 +13,12 @@ class EventDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventState = context.watch<EventState>();
+    
+    final appState = context.watch<AppState>();
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
-    Future<Uint8List> image = eventState.getSnapshot(event.id);
+    Future<Uint8List> image = appState.getSnapshot(event.id);
 
     return FutureBuilder<Uint8List>(
       future: image,
@@ -24,11 +26,7 @@ class EventDetails extends StatelessWidget {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              leading: BackButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
+              leading: _buildBackButton(context),
               title: Text(convertedDate),
             ),
             body: Padding(
@@ -77,4 +75,15 @@ class EventDetails extends StatelessWidget {
       },
     );
   }
+
+Widget _buildBackButton(BuildContext context) {
+    return BackButton(
+      onPressed: () {
+        Navigator.pushReplacementNamed(context, EventScreen.routeName);
+      },
+    );
+  }
 }
+
+
+

@@ -48,6 +48,32 @@ class UserService {
     }
   }
 
+  Future<TokenModel> refresh(String username, String refreshToken) async {
+    const headerList = <String, String>{
+      'accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    var params = <String, String>{
+      'username': username,
+      'token': refreshToken,
+    };
+    try {
+      var url =
+          urlFormatter(AppConfig.baseUrl, AppConfig.refreshEndpoint, params);
+      var response = await http.post(url, headers: headerList);
+      if (response.statusCode == 200) {
+        TokenModel token = tokenModelFromJson(response.body);
+        return token;
+      }
+      //TODO: Custom Exception type
+      throw Exception(
+          'Failed to login, status code: ${response.statusCode}, ${response.body}');
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<void> registerFcmToken(String fcmToken, String userToken) async {
     final headerList = <String, String>{
       'accept': 'application/json',

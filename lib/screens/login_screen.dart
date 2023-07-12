@@ -4,7 +4,7 @@ import '../state/app_state.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-
+  static const routeName = '/Login';
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();

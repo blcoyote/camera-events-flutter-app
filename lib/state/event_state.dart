@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:camera_events/state/app_state.dart';
 import 'package:flutter/material.dart';
@@ -7,33 +8,37 @@ import '../services/event_api.dart';
 class EventState extends ChangeNotifier {
   // Basic state for the app
   String token = '';
-
-  //TODO: cameraEvent state. Move to separate state file?
   bool isEventsLoading = false;
   bool isEventsError = false;
   String eventsErrorMessage = '';
   List<EventModel> events = <EventModel>[];
   bool isEventDetailImageLoading = false;
+  bool hasEventsLoaded = false;
+  EventService eventService = EventService();
 
   EventState(AppState of) {
     token = of.token;
   }
 
-  Future<void> getEvents() async {
-    isEventsLoading = true;
-    try {
-      var eventsRequest = await EventService().getEvents(token);
-      if (eventsRequest == null) {
-        throw Exception('Failed to load events');
-      }
-      events = eventsRequest;
-    } catch (e) {
-      isEventsError = true;
-      eventsErrorMessage = e.toString();
-    }
-    isEventsLoading = false;
+  Future<void> getEvents({bool forceRefresh = false}) async {
+    if (forceRefresh || !hasEventsLoaded) {
+      isEventsLoading = true;
+      try {
+        var eventsRequest = await eventService.getEvents(token);
+        if (eventsRequest == null) {
+          throw Exception(eventsErrorMessage);
+        }
+        events = eventsRequest;
+      } catch (e) {
+        isEventsError = true;
+        eventsErrorMessage = e.toString();
+      } finally {
+        isEventsLoading = false;
+        hasEventsLoaded = true;
 
-    notifyListeners();
+        notifyListeners();
+      }
+    }
   }
 
   Future<Uint8List> getSnapshot(String eventId) async {
@@ -42,7 +47,7 @@ class EventState extends ChangeNotifier {
       var image = await EventService().getSnapshot(token, eventId);
       return image;
     } catch (e) {
-      print(e);
+      log(e.toString());
     } finally {
       isEventDetailImageLoading = false;
     }
