@@ -1,7 +1,6 @@
 import 'package:camera_events/routes/event_notification.dart';
 import 'package:camera_events/screens/login_screen.dart';
 import 'package:camera_events/screens/start_screen.dart';
-import 'package:camera_events/state/event_state.dart';
 import 'package:camera_events/state/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
