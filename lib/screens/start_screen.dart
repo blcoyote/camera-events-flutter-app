@@ -16,7 +16,8 @@ class StartScreen extends StatefulWidget {
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  //
+await Firebase.initializeApp();
 
   navigatorKey.currentState?.pushReplacementNamed(message.data['path']);
 }
