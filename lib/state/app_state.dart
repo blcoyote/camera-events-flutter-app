@@ -27,6 +27,7 @@ class AppState extends ChangeNotifier {
   late String fcmToken;
   UserService userService = UserService();
   EventService eventService = EventService();
+  late int eventsLimit;
 
   // events state
   bool isEventsLoading = false;
@@ -37,8 +38,7 @@ class AppState extends ChangeNotifier {
   bool hasEventsLoaded = false;
 
   late NotificationSettings settings;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   String get token {
     if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
@@ -88,9 +88,10 @@ class AppState extends ChangeNotifier {
     _token = prefs.getString('token') ?? '';
     _refreshToken = prefs.getString('refreshToken') ?? '';
     _username = prefs.getString('username') ?? '';
+    eventsLimit = prefs.getInt('eventsLimit') ?? 20;
 
     //evaluate if jwt token is valid
-    if (token.isEmpty || JwtDecoder.isExpired(token)) {
+    if (_token.isEmpty || JwtDecoder.isExpired(_token)) {
       prefs.remove('token');
       _token = '';
     }
@@ -99,6 +100,15 @@ class AppState extends ChangeNotifier {
       await processSilentLogin();
     }
     loadingApp = false;
+    notifyListeners();
+  }
+
+  Future<void> setSettings(int? limit) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (limit != null) {
+      eventsLimit = limit;
+      prefs.setInt('eventsLimit', limit);
+    }
     notifyListeners();
   }
 
@@ -113,8 +123,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> processLogin(
-      BuildContext context, String username, String password) async {
+  Future<void> processLogin(BuildContext context, String username, String password) async {
     loggingIn = true;
 
     try {
@@ -160,16 +169,17 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> sendNotification(String title, String body) async {
-    await Notifications.showNotification(
-        flutterLocalNotificationsPlugin, title, body);
+    await Notifications.showNotification(flutterLocalNotificationsPlugin, title, body);
     notifyListeners();
   }
 
   Future<void> getEvents({bool forceRefresh = false}) async {
+    CameraEventQueryParams params = CameraEventQueryParams(limit: eventsLimit);
+
     if (forceRefresh || !hasEventsLoaded) {
       isEventsLoading = true;
       try {
-        var eventsRequest = await eventService.getEvents(_token);
+        var eventsRequest = await eventService.getEvents(_token, params);
         if (eventsRequest == null) {
           throw Exception(eventsErrorMessage);
         }
