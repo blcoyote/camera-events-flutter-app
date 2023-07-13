@@ -153,12 +153,10 @@ class AppState extends ChangeNotifier {
       log(e.toString());
       await logout();
     }
-    notifyListeners();
   }
 
   Future<void> logout() async {
     setToken('', '', '');
-    notifyListeners();
   }
 
   Future<void> sendNotification(String title, String body) async {
