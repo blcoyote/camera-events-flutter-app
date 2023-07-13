@@ -18,7 +18,7 @@ class EventDetails extends StatelessWidget {
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
-    Future<Uint8List> image = appState.getSnapshot(event.id);
+    //Future<Uint8List> image = appState.getSnapshot(event.id);
 
     return FutureBuilder<Uint8List>(
       future: image,
@@ -115,14 +115,34 @@ class EventDetails extends StatelessWidget {
                 ],
               ),
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+            const SizedBox(height: 16),
+            Text(
+              'Event ID: ${event.id}',
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              'Object detection label: ${event.label}',
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<Uint8List>(
+              future: appState.getSnapshot(event.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return const Text('Error loading image');
+                if (snapshot.hasData) {
+                  return Image.memory(snapshot.data!);
+                } else {
+                  return const Center(child: Column(children: [SizedBox(height: 100), CircularProgressIndicator()]));
+                }
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

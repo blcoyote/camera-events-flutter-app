@@ -1,5 +1,6 @@
 import 'package:camera_events/routes/event_notification.dart';
 import 'package:camera_events/screens/login_screen.dart';
+import 'package:camera_events/screens/settings_screen.dart';
 import 'package:camera_events/screens/start_screen.dart';
 import 'package:camera_events/state/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,11 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => AppState(),
         ),
-        // ChangeNotifierProxyProvider<AppState, EventState>(
-        //   create: (context) =>
-        //       EventState(Provider.of<AppState>(context, listen: false)),
-        //   update: (context, appState, eventState) => EventState(appState),
-        // ),
+
         
       ],
       child: Consumer<AppState>(
@@ -43,12 +40,11 @@ class MyApp extends StatelessWidget {
                 '/': (context) => const StartScreen(),
                 LoginScreen.routeName: (context) => const LoginScreen(),
                 EventScreen.routeName: (context) => const EventScreen(),
-                EventNotificationScreen.routeName: (context) =>
-                    const EventNotificationScreen(),
+                EventNotificationScreen.routeName: (context) => const EventNotificationScreen(),
                 StartScreen.routeName: (context) => const StartScreen(),
+                SettingsScreen.routeName: (context) => const SettingsScreen(),
               },
               theme: ThemeData(
-                // This is the theme of your application.
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
               ));
