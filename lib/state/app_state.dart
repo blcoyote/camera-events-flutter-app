@@ -85,7 +85,6 @@ class AppState extends ChangeNotifier {
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-
     _token = prefs.getString('token') ?? '';
     _refreshToken = prefs.getString('refreshToken') ?? '';
     _username = prefs.getString('username') ?? '';
@@ -96,7 +95,6 @@ class AppState extends ChangeNotifier {
       prefs.remove('token');
       _token = '';
     }
-
     if (_token.isEmpty && _refreshToken.isNotEmpty && _username.isNotEmpty) {
       await processSilentLogin();
     }
@@ -126,10 +124,10 @@ class AppState extends ChangeNotifier {
 
   Future<void> processLogin(BuildContext context, String username, String password) async {
     loggingIn = true;
-
     try {
       TokenModel token = await UserService().login(username, password);
-      setToken(token.accessToken, token.refreshToken, username);
+      await setToken(token.accessToken, token.refreshToken, username);
+      getFcmToken();
     } catch (e) {
       final error = e.toString();
       final snackBar = SnackBar(
@@ -144,28 +142,22 @@ class AppState extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     loggingIn = false;
-    getFcmToken();
   }
 
   Future<void> processSilentLogin() async {
     try {
       TokenModel token = await UserService().refresh(username: _username, refreshToken: _refreshToken);
       await setToken(token.accessToken, token.refreshToken, _username);
+      getFcmToken();
     } catch (e) {
       log(e.toString());
       await logout();
     }
-    loggingIn = false;
-    getFcmToken();
     notifyListeners();
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
     setToken('', '', '');
-    prefs.setString('token', '');
-    prefs.setString('refreshToken', '');
-    prefs.setString('username', '');
     notifyListeners();
   }
 
@@ -176,7 +168,6 @@ class AppState extends ChangeNotifier {
 
   Future<void> getEvents({bool forceRefresh = false}) async {
     CameraEventQueryParams params = CameraEventQueryParams(limit: eventsLimit);
-
     if (forceRefresh || !hasEventsLoaded) {
       isEventsLoading = true;
       try {
@@ -191,7 +182,6 @@ class AppState extends ChangeNotifier {
       } finally {
         isEventsLoading = false;
         hasEventsLoaded = true;
-
         notifyListeners();
       }
     }
