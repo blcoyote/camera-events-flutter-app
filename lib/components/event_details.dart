@@ -13,70 +13,61 @@ class EventDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final appState = context.watch<AppState>();
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
-    Future<Uint8List> image = appState.getSnapshot(event.id);
+    //Future<Uint8List> image = appState.getSnapshot(event.id);
 
-    return FutureBuilder<Uint8List>(
-      future: image,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: _buildBackButton(context),
-              title: Text(convertedDate),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Camera: ${event.camera}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Event ID: ${event.id}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  Text(
-                    'Object detection label: ${event.label}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Snapshot:',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  Image.memory(snapshot.data!),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: _buildBackButton(context),
+        title: Text(convertedDate),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Camera: ${event.camera}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
               ),
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+            const SizedBox(height: 16),
+            Text(
+              'Event ID: ${event.id}',
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              'Object detection label: ${event.label}',
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<Uint8List>(
+              future: appState.getSnapshot(event.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return const Text('Error loading image');
+                if (snapshot.hasData) {
+                  return Image.memory(snapshot.data!);
+                } else {
+                  return const Center(child: Column(children: [SizedBox(height: 100), CircularProgressIndicator()]));
+                }
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-Widget _buildBackButton(BuildContext context) {
+  Widget _buildBackButton(BuildContext context) {
     return BackButton(
       onPressed: () {
         Navigator.pushReplacementNamed(context, EventScreen.routeName);
@@ -84,6 +75,3 @@ Widget _buildBackButton(BuildContext context) {
     );
   }
 }
-
-
-
