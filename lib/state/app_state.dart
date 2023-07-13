@@ -148,7 +148,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> processSilentLogin() async {
     try {
-      TokenModel token = await UserService().refresh(_username, _refreshToken);
+      TokenModel token = await UserService().refresh(username: _username, refreshToken: _refreshToken);
       await setToken(token.accessToken, token.refreshToken, _username);
     } catch (e) {
       log(e.toString());
