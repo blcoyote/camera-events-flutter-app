@@ -2,6 +2,9 @@ import 'dart:convert';
 
 List<EventModel> eventModelFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
+    
+EventModel eventModelFromJsonSingle(String str) =>
+    EventModel.fromJson(json.decode(str));
 
 class EventModel {
   EventModel({
@@ -26,8 +29,8 @@ class EventModel {
   });
 
   final String id;
-  final String? area;
-  final String? box;
+  final int? area;
+  final List<int>? box;
   final String camera;
   final int? endTime;
   final int startTime;
@@ -37,7 +40,7 @@ class EventModel {
   final String label;
   final String? plusId;
   final String? ratio;
-  final String? region;
+  final List<int>? region;
   final bool retainIndefinitely;
   final String? subLabel;
   final String? thumbnail;
@@ -86,24 +89,24 @@ class CameraEventQueryParams {
   int? before;
   int? after;
   String? cameras;
-  List<String>? labels;
-  List<String>? zones;
-  List<int>? limit;
+  String? labels;
+  String? zones;
+  int? limit;
   int? hasSnapshot;
   int? hasClip;
   int? includeThumbnails;
   int? inProgress;
 
   Map<String, dynamic> toJson() => {
-        "before": before,
-        "after": after,
-        "cameras": cameras,
-        "labels": labels,
-        "zones": zones,
-        "limit": limit,
-        "has_snapshot": hasSnapshot,
-        "has_clip": hasClip,
-        "include_thumbnails": includeThumbnails,
-        "in_progress": inProgress,
+        if (before != null) "before": before.toString(),
+        if (after != null) "after": after.toString(),
+        if (cameras != null) "cameras": cameras.toString(),
+        if (labels != null) "labels": labels.toString(),
+        if (zones != null) "zones": zones.toString(),
+        if (limit != null) "limit": limit.toString(),
+        if (hasSnapshot != null) "has_snapshot": hasSnapshot.toString(),
+        if (hasClip != null) "has_clip": hasClip.toString(),
+        if (includeThumbnails != null) "include_thumbnails": includeThumbnails.toString(),
+        if (inProgress != null) "in_progress": inProgress.toString(),
       };
 }

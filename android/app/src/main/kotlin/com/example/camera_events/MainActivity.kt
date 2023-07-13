@@ -1,4 +1,4 @@
-package com.example.camera_events
+package com.elcoyote.cameraevents
 
 import io.flutter.embedding.android.FlutterActivity
 

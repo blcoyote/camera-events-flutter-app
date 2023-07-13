@@ -4,7 +4,7 @@ import '../state/app_state.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-
+  static const routeName = '/Login';
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
@@ -39,6 +39,7 @@ class LoginScreen extends StatelessWidget {
                   width: 300,
                   child: TextField(
                     controller: emailEditingController,
+                    autofillHints: const [AutofillHints.username],
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Username',
@@ -56,6 +57,7 @@ class LoginScreen extends StatelessWidget {
                   width: 300,
                   child: TextFormField(
                     controller: passwordEditingController,
+                    autofillHints: const [AutofillHints.password],
                     obscureText: true,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -77,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                   //TODO FORGOT PASSWORD SCREEN GOES HERE
 
                   // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (_) => const LoginScreen())
+                  //     MaterialPageRoute(builder: (_) => const ForgotPassword())
                   //     );
                 },
                 child: const Text(
