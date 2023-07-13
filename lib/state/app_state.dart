@@ -79,6 +79,7 @@ class AppState extends ChangeNotifier {
   getFcmToken() async {
     fcmToken = await messaging.getToken().then((value) => fcmToken = value!);
     await userService.registerFcmToken(fcmToken, token);
+    log('posted fcm token');
     //post request
   }
 
