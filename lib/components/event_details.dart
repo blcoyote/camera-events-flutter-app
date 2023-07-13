@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:camera_events/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +14,6 @@ class EventDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final appState = context.watch<AppState>();
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
@@ -54,14 +54,64 @@ class EventDetails extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   const Text(
                     'Snapshot:',
                     style: TextStyle(
                       fontSize: 18,
                     ),
                   ),
-                  Image.memory(snapshot.data!),
+                  SizedBox(
+                    height: 300,
+                    child: InteractiveViewer(
+                        panEnabled:
+                            false, // Set it to false to prevent panning.
+                        boundaryMargin: const EdgeInsets.all(0),
+                        minScale: 1,
+                        maxScale: 4,
+                        child: Image.memory(snapshot.data!)),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Snapshot saved to gallery'),
+                              action: SnackBarAction(
+                                label: 'Close',
+                                onPressed: () {
+                                  //TODO: Code to execute.
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Icon(Icons.save),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Clip saved to gallery'),
+                              action: SnackBarAction(
+                                label: 'Close',
+                                onPressed: () {
+                                  //TODO: Code to execute.
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Icon(Icons.movie),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -76,7 +126,7 @@ class EventDetails extends StatelessWidget {
     );
   }
 
-Widget _buildBackButton(BuildContext context) {
+  Widget _buildBackButton(BuildContext context) {
     return BackButton(
       onPressed: () {
         Navigator.pushReplacementNamed(context, EventScreen.routeName);
@@ -84,6 +134,3 @@ Widget _buildBackButton(BuildContext context) {
     );
   }
 }
-
-
-
