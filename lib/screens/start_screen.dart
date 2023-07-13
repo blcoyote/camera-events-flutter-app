@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'event_screen.dart';
-import 'loading.dart';
+import 'loading_screen.dart';
 import 'login_screen.dart';
 
 class StartScreen extends StatefulWidget {
@@ -17,10 +17,12 @@ class StartScreen extends StatefulWidget {
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+
   navigatorKey.currentState?.pushReplacementNamed(message.data['path']);
 }
 
 class _StartScreenState extends State<StartScreen> {
+  
   @override
   void initState() {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -39,7 +41,7 @@ class _StartScreenState extends State<StartScreen> {
     final appState = context.watch<AppState>();
     return Builder(builder: (context) {
       if (appState.loadingApp) {
-        return const Loading();
+        return const LoadingScreen();
       }
       if (appState.token.isEmpty) {
         return const LoginScreen();

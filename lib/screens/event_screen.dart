@@ -28,7 +28,7 @@ class EventScreen extends StatelessWidget {
 
 containerbuilder(BuildContext context, AppState appState) {
   if (appState.isEventsLoading) {
-    //TODO replace by proper loading indicator based on Listview.builder
+    //TODO replace by proper loading indicator based on Listview.builder output
     return const Center(
       child: CircularProgressIndicator(),
     );

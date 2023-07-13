@@ -14,9 +14,7 @@ class UserService {
         List<UserModel> model = userModelFromJson(response.body);
         return model;
       }
-      //TODO: Custom Exception type?
-      throw Exception(
-          'Failed to load users, status code: ${response.statusCode}, ${response.body}');
+      throw Exception('Failed to load users, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -37,37 +35,35 @@ class UserService {
       var response = await http.post(url, headers: headerList, body: body);
       if (response.statusCode == 200) {
         TokenModel token = tokenModelFromJson(response.body);
+        log('logged in with loginform');
         return token;
       }
-      //TODO: Custom Exception type
-      throw Exception(
-          'Failed to login, status code: ${response.statusCode}, ${response.body}');
+      throw Exception('Failed to login, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
 
-  Future<TokenModel> refresh(String username, String refreshToken) async {
+  Future<TokenModel> refresh({required String username, required String refreshToken}) async {
     const headerList = <String, String>{
       'accept': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded'
     };
     var params = <String, String>{
-      'username': username,
+      'user': username,
       'token': refreshToken,
     };
+    log(params.toString());
     try {
-      var url =
-          urlFormatter(AppConfig.baseUrl, AppConfig.refreshEndpoint, params);
+      var url = urlFormatter(AppConfig.baseUrl, AppConfig.refreshEndpoint, params);
       var response = await http.post(url, headers: headerList);
       if (response.statusCode == 200) {
         TokenModel token = tokenModelFromJson(response.body);
+        log('logged in with refresh token');
         return token;
       }
-      //TODO: Custom Exception type
-      throw Exception(
-          'Failed to login, status code: ${response.statusCode}, ${response.body}');
+      throw Exception('Failed to login, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -84,7 +80,6 @@ class UserService {
     try {
       var url = urlFormatter(AppConfig.baseUrl, '/fcm', params);
       await http.post(url, headers: headerList);
-
     } catch (e) {
       log(e.toString());
       rethrow;
