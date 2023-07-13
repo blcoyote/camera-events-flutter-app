@@ -14,7 +14,6 @@ class UserService {
         List<UserModel> model = userModelFromJson(response.body);
         return model;
       }
-      //TODO: Custom Exception type?
       throw Exception(
           'Failed to load users, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
@@ -39,7 +38,6 @@ class UserService {
         TokenModel token = tokenModelFromJson(response.body);
         return token;
       }
-      //TODO: Custom Exception type
       throw Exception(
           'Failed to login, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
@@ -65,7 +63,6 @@ class UserService {
         TokenModel token = tokenModelFromJson(response.body);
         return token;
       }
-      //TODO: Custom Exception type
       throw Exception(
           'Failed to login, status code: ${response.statusCode}, ${response.body}');
     } catch (e) {
