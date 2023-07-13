@@ -103,7 +103,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setSettings(int? limit) async {
+  Future<void> setSettings({int? limit}) async {
     final prefs = await SharedPreferences.getInstance();
     if (limit != null) {
       eventsLimit = limit;
