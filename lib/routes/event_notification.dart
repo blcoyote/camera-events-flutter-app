@@ -32,7 +32,8 @@ class EventNotificationScreen extends StatelessWidget {
               return EventDetails(event: event);
             }
           } else {
-          return const Center(
+          return const Scaffold(
+              body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -41,7 +42,7 @@ class EventNotificationScreen extends StatelessWidget {
                 Text('Loading event details...'),
               ],
             ),
-          );
+          ));
           }
       },
     );

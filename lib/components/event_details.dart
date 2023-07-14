@@ -117,9 +117,15 @@ class EventDetails extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Scaffold(
+            body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+            ],
+          ),
+        ));
       },
     );
   }
