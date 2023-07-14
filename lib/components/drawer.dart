@@ -26,7 +26,8 @@ Drawer buildDrawer(BuildContext context) {
         ListTile(
           title: const Text('Settings'),
           onTap: () {
-            Navigator.pushReplacementNamed(context, SettingsScreen.routeName);
+            Navigator.pop(context);
+            Navigator.pushNamed(context, SettingsScreen.routeName);
           },
         ),
         ListTile(

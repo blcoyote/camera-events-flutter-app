@@ -15,22 +15,20 @@ class StartScreen extends StatefulWidget {
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-
   navigatorKey.currentState?.pushReplacementNamed(message.data['path']);
 }
 
 class _StartScreenState extends State<StartScreen> {
-  
   @override
   void initState() {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     Stream<RemoteMessage> stream = FirebaseMessaging.onMessageOpenedApp;
     stream.listen((RemoteMessage event) async {
       if (event.data.isNotEmpty) {
-        await Navigator.of(context).pushReplacementNamed(event.data['path'],
-            arguments: event.data['id']);
+        await Navigator.of(context).pushReplacementNamed(event.data['path'], arguments: event.data['id']);
       }
     });
     super.initState();

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:ui';
 import 'package:camera_events/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +17,7 @@ class EventDetails extends StatelessWidget {
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
-    //Future<Uint8List> image = appState.getSnapshot(event.id);
+    Future<Uint8List> image = appState.getSnapshot(event.id);
 
     return FutureBuilder<Uint8List>(
       future: image,
@@ -66,8 +65,7 @@ class EventDetails extends StatelessWidget {
                   SizedBox(
                     height: 300,
                     child: InteractiveViewer(
-                        panEnabled:
-                            false, // Set it to false to prevent panning.
+                        panEnabled: false, // Set it to false to prevent panning.
                         boundaryMargin: const EdgeInsets.all(0),
                         minScale: 1,
                         maxScale: 4,
@@ -115,34 +113,20 @@ class EventDetails extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Event ID: ${event.id}',
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              'Object detection label: ${event.label}',
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(height: 16),
-            FutureBuilder<Uint8List>(
-              future: appState.getSnapshot(event.id),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) return const Text('Error loading image');
-                if (snapshot.hasData) {
-                  return Image.memory(snapshot.data!);
-                } else {
-                  return const Center(child: Column(children: [SizedBox(height: 100), CircularProgressIndicator()]));
-                }
-              },
-            ),
-          ],
-        ),
-      ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        return const Scaffold(
+            body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+            ],
+          ),
+        ));
+      },
     );
   }
 
