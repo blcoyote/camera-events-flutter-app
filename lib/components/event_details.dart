@@ -17,10 +17,8 @@ class EventDetails extends StatelessWidget {
     var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
-    Future<Uint8List> image = appState.getSnapshot(event.id);
-
     return FutureBuilder<Uint8List>(
-      future: image,
+      future: appState.getSnapshot(event.id),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

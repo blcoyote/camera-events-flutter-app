@@ -40,11 +40,11 @@ class AppState extends ChangeNotifier {
   late NotificationSettings settings;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  String get token {
-    if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
-      _token = '';
+  get token {
+    if (_token.isNotEmpty && !JwtDecoder.isExpired(_token)) {
+      return _token;
     }
-    return _token;
+    return '';
   }
 
   AppState() {
@@ -68,10 +68,13 @@ class AppState extends ChangeNotifier {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       processFirebaseNotification(message);
     });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      processFirebaseNotification(message);
+    });
   }
 
   void processFirebaseNotification(RemoteMessage message) {
-    // Parse the message received
+    // TODO: Parse the message received
     //_totalNotifications++;
     notifyListeners();
   }
@@ -85,10 +88,9 @@ class AppState extends ChangeNotifier {
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('token') ?? '';
-    _refreshToken = prefs.getString('refreshToken') ?? '';
-    _username = prefs.getString('username') ?? '';
+
     eventsLimit = prefs.getInt('eventsLimit') ?? 20;
+    setToken(prefs.getString('token') ?? '', prefs.getString('refreshToken') ?? '', prefs.getString('username') ?? '');
 
     //evaluate if jwt token is valid
     if (_token.isEmpty || JwtDecoder.isExpired(_token)) {
@@ -111,7 +113,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setToken(String token, String refreshToken, String? username) async {
+  setToken(String token, String refreshToken, String? username) async {
     final prefs = await SharedPreferences.getInstance();
     _token = token;
     _refreshToken = refreshToken;
@@ -167,14 +169,10 @@ class AppState extends ChangeNotifier {
   Future<void> getEvents({bool forceRefresh = false}) async {
     CameraEventQueryParams params = CameraEventQueryParams(limit: eventsLimit);
 
-    if (JwtDecoder.isExpired(_token)) {
-      await processSilentLogin();
-    }
-
     if (forceRefresh || !hasEventsLoaded) {
       isEventsLoading = true;
       try {
-        var eventsRequest = await eventService.getEvents(_token, params);
+        var eventsRequest = await eventService.getEvents(token, params);
         if (eventsRequest == null) {
           throw Exception(eventsErrorMessage);
         }
@@ -193,7 +191,7 @@ class AppState extends ChangeNotifier {
   Future<Uint8List> getSnapshot(String eventId) async {
     isEventDetailImageLoading = true;
     try {
-      var image = await EventService().getSnapshot(_token, eventId);
+      var image = await EventService().getSnapshot(token, eventId);
       return image;
     } catch (e) {
       log(e.toString());
