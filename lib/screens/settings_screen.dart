@@ -13,7 +13,12 @@ class SettingsScreen extends StatelessWidget {
     //appState.setSettings(limit: 50);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        leading: BackButton(
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
 
       //TODO: backbutton instead of drawer
       drawer: buildDrawer(context),
@@ -23,9 +28,9 @@ class SettingsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8.0),
-            const Text(
-              'Event display limit',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            Text(
+              'Event display limit: ${appState.eventsLimit}',
+              style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
             Row(

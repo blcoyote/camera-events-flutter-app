@@ -166,6 +166,11 @@ class AppState extends ChangeNotifier {
 
   Future<void> getEvents({bool forceRefresh = false}) async {
     CameraEventQueryParams params = CameraEventQueryParams(limit: eventsLimit);
+
+    if (JwtDecoder.isExpired(_token)) {
+      await processSilentLogin();
+    }
+
     if (forceRefresh || !hasEventsLoaded) {
       isEventsLoading = true;
       try {

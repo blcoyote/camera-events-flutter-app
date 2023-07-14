@@ -32,7 +32,16 @@ class EventNotificationScreen extends StatelessWidget {
               return EventDetails(event: event);
             }
           } else {
-            return const CircularProgressIndicator();
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text('Loading event details...'),
+              ],
+            ),
+          );
           }
       },
     );
