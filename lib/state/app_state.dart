@@ -43,7 +43,13 @@ class AppState extends ChangeNotifier {
       return '';
     }
     return _token;
-    
+  }
+
+  Future<String> getValidToken() {
+    if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
+      return processSilentLogin().then((value) => _token);
+    }
+    return Future.value(_token);
   }
 
   AppState() {
@@ -73,7 +79,7 @@ class AppState extends ChangeNotifier {
   }
 
   void processFirebaseNotification(RemoteMessage message) {
-    // TODO: Parse the message received
+    // TODO: Parse the message received on open app
     //_totalNotifications++;
     notifyListeners();
   }
@@ -200,5 +206,20 @@ class AppState extends ChangeNotifier {
       isEventDetailImageLoading = false;
     }
     throw Exception('Failed to load snapshot');
+  }
+
+  Future<EventModel> getEvent(String id) async {
+    String token = await getValidToken();
+
+    try {
+      var eventsRequest = await eventService.getEvent(token, id.trim());
+      if (eventsRequest == null) {
+        throw Exception(eventsErrorMessage);
+      }
+      return eventsRequest;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }
