@@ -1,7 +1,6 @@
 import 'package:camera_events/models/event.model.dart';
 import 'package:camera_events/services/notifications.dart';
 import 'package:camera_events/services/user_api.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -21,8 +20,7 @@ class AppState extends ChangeNotifier {
   bool loggingIn = false;
 
   // basic app state
-  //late String id = '';
-  late final FirebaseAnalytics analytics;
+  //late final FirebaseAnalytics analytics;
   late final FirebaseMessaging messaging;
   late String fcmToken;
   UserService userService = UserService();
@@ -52,7 +50,7 @@ class AppState extends ChangeNotifier {
     loadSettings();
     Notifications.initialize(flutterLocalNotificationsPlugin);
     messaging = FirebaseMessaging.instance;
-    analytics = FirebaseAnalytics.instance;
+    //analytics = FirebaseAnalytics.instance;
     registerFirebaseNotifications();
   }
 
@@ -66,12 +64,12 @@ class AppState extends ChangeNotifier {
       provisional: false,
       sound: true,
     );
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      processFirebaseNotification(message);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      processFirebaseNotification(message);
-    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   processFirebaseNotification(message);
+    // });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   processFirebaseNotification(message);
+    // });
   }
 
   void processFirebaseNotification(RemoteMessage message) {
