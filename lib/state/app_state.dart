@@ -41,10 +41,11 @@ class AppState extends ChangeNotifier {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   get token {
-    if (_token.isNotEmpty && !JwtDecoder.isExpired(_token)) {
-      return _token;
+    if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
+      return '';
     }
-    return '';
+    return _token;
+    
   }
 
   AppState() {
@@ -90,7 +91,9 @@ class AppState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     eventsLimit = prefs.getInt('eventsLimit') ?? 20;
-    setToken(prefs.getString('token') ?? '', prefs.getString('refreshToken') ?? '', prefs.getString('username') ?? '');
+    _token = prefs.getString('token') ?? '';
+    _refreshToken = prefs.getString('refreshToken') ?? '';
+    _username = prefs.getString('username') ?? '';
 
     //evaluate if jwt token is valid
     if (_token.isEmpty || JwtDecoder.isExpired(_token)) {
