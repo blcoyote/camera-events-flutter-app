@@ -22,14 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (context) => AppState(),
         ),
-
-        
       ],
       child: Consumer<AppState>(
         builder: (context, state, child) {
@@ -47,6 +44,14 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ElevatedButton.styleFrom(
+                    enableFeedback: true,
+                    disabledBackgroundColor: Colors.grey, // set your own color
+                    disabledForegroundColor: Colors.blueGrey, // set your own color
+                    disabledMouseCursor: SystemMouseCursors.forbidden, // when is disable the change the cursor type
+                  ),
+                ),
               ));
         },
       ),

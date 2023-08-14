@@ -1,7 +1,6 @@
 import 'package:camera_events/models/event.model.dart';
 import 'package:camera_events/services/notifications.dart';
 import 'package:camera_events/services/user_api.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -21,8 +20,7 @@ class AppState extends ChangeNotifier {
   bool loggingIn = false;
 
   // basic app state
-  //late String id = '';
-  late final FirebaseAnalytics analytics;
+  //late final FirebaseAnalytics analytics;
   late final FirebaseMessaging messaging;
   late String fcmToken;
   UserService userService = UserService();
@@ -40,18 +38,25 @@ class AppState extends ChangeNotifier {
   late NotificationSettings settings;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  String get token {
+  get token {
     if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
-      _token = '';
+      return '';
     }
     return _token;
+  }
+
+  Future<String> getValidToken() {
+    if (_token.isNotEmpty && JwtDecoder.isExpired(_token)) {
+      return processSilentLogin().then((value) => _token);
+    }
+    return Future.value(_token);
   }
 
   AppState() {
     loadSettings();
     Notifications.initialize(flutterLocalNotificationsPlugin);
     messaging = FirebaseMessaging.instance;
-    analytics = FirebaseAnalytics.instance;
+    //analytics = FirebaseAnalytics.instance;
     registerFirebaseNotifications();
   }
 
@@ -65,13 +70,16 @@ class AppState extends ChangeNotifier {
       provisional: false,
       sound: true,
     );
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      processFirebaseNotification(message);
-    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   processFirebaseNotification(message);
+    // });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   processFirebaseNotification(message);
+    // });
   }
 
   void processFirebaseNotification(RemoteMessage message) {
-    // Parse the message received
+    // TODO: Parse the message received on open app
     //_totalNotifications++;
     notifyListeners();
   }
@@ -85,10 +93,11 @@ class AppState extends ChangeNotifier {
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
+
+    eventsLimit = prefs.getInt('eventsLimit') ?? 20;
     _token = prefs.getString('token') ?? '';
     _refreshToken = prefs.getString('refreshToken') ?? '';
     _username = prefs.getString('username') ?? '';
-    eventsLimit = prefs.getInt('eventsLimit') ?? 20;
 
     //evaluate if jwt token is valid
     if (_token.isEmpty || JwtDecoder.isExpired(_token)) {
@@ -111,7 +120,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setToken(String token, String refreshToken, String? username) async {
+  setToken(String token, String refreshToken, String? username) async {
     final prefs = await SharedPreferences.getInstance();
     _token = token;
     _refreshToken = refreshToken;
@@ -167,14 +176,10 @@ class AppState extends ChangeNotifier {
   Future<void> getEvents({bool forceRefresh = false}) async {
     CameraEventQueryParams params = CameraEventQueryParams(limit: eventsLimit);
 
-    if (JwtDecoder.isExpired(_token)) {
-      await processSilentLogin();
-    }
-
     if (forceRefresh || !hasEventsLoaded) {
       isEventsLoading = true;
       try {
-        var eventsRequest = await eventService.getEvents(_token, params);
+        var eventsRequest = await eventService.getEvents(token, params);
         if (eventsRequest == null) {
           throw Exception(eventsErrorMessage);
         }
@@ -193,7 +198,7 @@ class AppState extends ChangeNotifier {
   Future<Uint8List> getSnapshot(String eventId) async {
     isEventDetailImageLoading = true;
     try {
-      var image = await EventService().getSnapshot(_token, eventId);
+      var image = await EventService().getSnapshot(token, eventId);
       return image;
     } catch (e) {
       log(e.toString());
@@ -201,5 +206,33 @@ class AppState extends ChangeNotifier {
       isEventDetailImageLoading = false;
     }
     throw Exception('Failed to load snapshot');
+  }
+
+  Future<Uint8List> getClip(String eventId) async {
+    isEventDetailImageLoading = true;
+    try {
+      var clip = await EventService().getClip(token, eventId);
+      return clip;
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isEventDetailImageLoading = false;
+    }
+    throw Exception('Failed to load clip');
+  }
+
+  Future<EventModel> getEvent(String id) async {
+    String token = await getValidToken();
+
+    try {
+      var eventsRequest = await eventService.getEvent(token, id.trim());
+      if (eventsRequest == null) {
+        throw Exception(eventsErrorMessage);
+      }
+      return eventsRequest;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }
