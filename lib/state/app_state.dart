@@ -208,6 +208,19 @@ class AppState extends ChangeNotifier {
     throw Exception('Failed to load snapshot');
   }
 
+  Future<Uint8List> getClip(String eventId) async {
+    isEventDetailImageLoading = true;
+    try {
+      var clip = await EventService().getClip(token, eventId);
+      return clip;
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isEventDetailImageLoading = false;
+    }
+    throw Exception('Failed to load clip');
+  }
+
   Future<EventModel> getEvent(String id) async {
     String token = await getValidToken();
 
