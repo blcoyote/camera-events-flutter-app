@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:camera_events/state/app_state.dart';
+import 'package:camera_events/utils/write_file.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -75,17 +76,29 @@ class EventDetails extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Snapshot saved to gallery'),
-                              action: SnackBarAction(
-                                label: 'Close',
-                                onPressed: () {
-                                  //TODO: Code to execute.
-                                },
-                              ),
-                            ),
-                          );
+                          writeFile(snapshot.data!, '${event.id}.jpg')
+                              .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('Snapshot saved to downloads'),
+                                      action: SnackBarAction(
+                                        label: 'Close',
+                                        onPressed: () {
+                                          //do nothing
+                                        },
+                                      ),
+                                    ),
+                                  ))
+                              .catchError((onError) => ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('Unable to save snapshot'),
+                                      action: SnackBarAction(
+                                        label: 'Close',
+                                        onPressed: () {
+                                          //do nothing
+                                        },
+                                      ),
+                                    ),
+                                  ));
                         },
                         child: const Icon(Icons.save),
                       ),
