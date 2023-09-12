@@ -126,8 +126,6 @@ class _EventDetailsState extends State<EventDetails> {
                         child: const Icon(Icons.save),
                       ),
                       const SizedBox(width: 16),
-
-                      // TODO: Change into download/play button - check if file exists?
                       ElevatedButton(
                         onPressed: () {
                           if (_isVideoDownloaded) {

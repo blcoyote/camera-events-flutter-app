@@ -16,6 +16,7 @@ class EventScreen extends StatelessWidget {
       appState.getEvents();
     }
 
+
     return Scaffold(
         appBar: AppBar(title: const Text('Camera Events')),
         drawer: buildDrawer(context),
@@ -27,6 +28,8 @@ class EventScreen extends StatelessWidget {
 }
 
 containerbuilder(BuildContext context, AppState appState) {
+
+
   if (appState.isEventsLoading) {
     //TODO replace by proper loading indicator based on Listview.builder output
     return const Center(
@@ -47,5 +50,5 @@ containerbuilder(BuildContext context, AppState appState) {
         event: appState.events[index],
       );
     },
-  );
+  );  
 }
