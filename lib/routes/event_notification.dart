@@ -18,32 +18,56 @@ class EventNotificationScreen extends StatelessWidget {
     final id = ModalRoute.of(context)!.settings.arguments as String;
     final AppState appState = context.watch<AppState>();
 
-
     return FutureBuilder<EventModel>(
       future: appState.getEvent(id.trim()),
         builder: (BuildContext context, AsyncSnapshot<EventModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              if (snapshot.error.toString().contains('401')){
+                return const Scaffold(
+                    body: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 16.0),
+                          Text('Refreshing login...'),
+                        ],
+                      ),
+                    )
+                );
+              }
+              return Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: 16.0),
+                        Text('Error: ${snapshot.error}'),
+                      ],
+                    ),
+                  )
+              );
             } else {
               final event = snapshot.data!;
               return EventDetails(event: event);
             }
-          } else {
-          return const Scaffold(
-              body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16.0),
-                Text('Loading event details...'),
-              ],
-            ),
-          ));
           }
+          return const Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16.0),
+                  Text('Loading event details...'),
+                ],
+              ),
+            )
+          );
       },
     );
-
   }
 }
+
