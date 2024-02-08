@@ -8,9 +8,9 @@ class SnapshotViewer extends StatelessWidget {
   final List<String> deviceNames;
 
   const SnapshotViewer({
-    Key? key,
+    super.key,
     required this.deviceNames,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

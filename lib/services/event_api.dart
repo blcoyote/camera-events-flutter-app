@@ -35,7 +35,6 @@ class EventService {
       'Authorization': 'Bearer $token'
     };
     try {
-      //TODO: test query parameters
       var uri = urlFormatter(AppConfig.baseUrl, AppConfig.eventEndpoint, queryParams?.toJson());
       var response = await http.get(uri, headers: headerList);
       if (response.statusCode == 200) {
@@ -56,7 +55,6 @@ class EventService {
       'Authorization': 'Bearer $token'
     };
     try {
-      //TODO: test query parameters
       var params = queryParams?.toJson();
       var uri = urlFormatter(AppConfig.baseUrl, '${AppConfig.eventEndpoint}$id', params);
 

@@ -20,7 +20,6 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
 
-      //TODO: backbutton instead of drawer
       drawer: buildDrawer(context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

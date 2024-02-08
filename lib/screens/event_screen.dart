@@ -22,12 +22,12 @@ class EventScreen extends StatelessWidget {
         drawer: buildDrawer(context),
         body: RefreshIndicator(
           onRefresh: () => appState.getEvents(forceRefresh: true),
-          child: containerbuilder(context, appState),
+          child: containerBuilder(context, appState),
         ));
   }
 }
 
-containerbuilder(BuildContext context, AppState appState) {
+containerBuilder(BuildContext context, AppState appState) {
 
 
   if (appState.isEventsLoading) {
