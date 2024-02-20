@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
-
 import '../models/event.model.dart';
 import 'event_details.dart';
 
@@ -16,7 +15,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var date = DateTime.fromMillisecondsSinceEpoch(event.startTime * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(event.startTime.toInt() * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
     Uint8List bytesImage = const Base64Decoder().convert(event.thumbnail!);
 

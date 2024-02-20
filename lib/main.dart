@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'screens/event_screen.dart';
 import 'firebase_options.dart';
+import 'color_schemes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,18 +42,9 @@ class MyApp extends StatelessWidget {
                 StartScreen.routeName: (context) => const StartScreen(),
                 SettingsScreen.routeName: (context) => const SettingsScreen(),
               },
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
-                elevatedButtonTheme: ElevatedButtonThemeData(
-                  style: ElevatedButton.styleFrom(
-                    enableFeedback: true,
-                    disabledBackgroundColor: Colors.grey, // set your own color
-                    disabledForegroundColor: Colors.blueGrey, // set your own color
-                    disabledMouseCursor: SystemMouseCursors.forbidden, // when is disable the change the cursor type
-                  ),
-                ),
-              ));
+            theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+            darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+          );
         },
       ),
     );

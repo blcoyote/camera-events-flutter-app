@@ -6,4 +6,5 @@ class AppConfig {
   static String refreshEndpoint = '/token/refresh';
   static String eventEndpoint = '/events/';
   static String websocketHub = '/events/ws';
+  static String camerasEndpoint = '/events/cameras';
 }

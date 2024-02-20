@@ -5,5 +5,7 @@
         120,
     ],
 },
-"dart.devToolsLocation": "external"
+"dart.devToolsLocation": "external",
+"cmake.configureOnOpen": true,
+"cmake.sourceDirectory": "C:/Users/blc/Desktop/Frigate_Events/camera-events-flutter-app/windows"
 }

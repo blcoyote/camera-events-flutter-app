@@ -38,7 +38,7 @@ class _EventDetailsState extends State<EventDetails> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    var date = DateTime.fromMillisecondsSinceEpoch(widget.event.startTime * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(widget.event.startTime.toInt() * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
     return FutureBuilder<Uint8List>(
@@ -71,6 +71,12 @@ class _EventDetailsState extends State<EventDetails> {
                   ),
                   Text(
                     'Object detection label: ${widget.event.label}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    'Probability: ${((widget.event.data?.score ?? 0) * 100).toStringAsFixed(3)}%',
                     style: const TextStyle(
                       fontSize: 16,
                     ),
@@ -126,8 +132,6 @@ class _EventDetailsState extends State<EventDetails> {
                         child: const Icon(Icons.save),
                       ),
                       const SizedBox(width: 16),
-
-                      // TODO: Change into download/play button - check if file exists?
                       ElevatedButton(
                         onPressed: () {
                           if (_isVideoDownloaded) {
