@@ -32,14 +32,14 @@ class EventModel {
   final int? area;
   final List<dynamic>? box;
   final String camera;
-  final int? endTime;
-  final int startTime;
+  final double? endTime;
+  final double startTime;
   final String? falsePositive;
   final bool hasClip;
   final bool hasSnapshot;
   final String label;
   final String? plusId;
-  final String? ratio;
+  final double? ratio;
   final List<dynamic>? region;
   final bool retainIndefinitely;
   final String? subLabel;

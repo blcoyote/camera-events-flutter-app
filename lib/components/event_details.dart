@@ -38,7 +38,7 @@ class _EventDetailsState extends State<EventDetails> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    var date = DateTime.fromMillisecondsSinceEpoch(widget.event.startTime * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(widget.event.startTime.toInt() * 1000);
     var convertedDate = DateFormat('dd-MMM-yyyy HH:mm:ss').format(date);
 
     return FutureBuilder<Uint8List>(
