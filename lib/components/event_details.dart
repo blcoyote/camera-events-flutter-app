@@ -75,6 +75,12 @@ class _EventDetailsState extends State<EventDetails> {
                       fontSize: 16,
                     ),
                   ),
+                  Text(
+                    'Probability: ${((widget.event.data?.score ?? 0) * 100).toStringAsFixed(3)}%',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
                   const SizedBox(
                     height: 16,
                   ),

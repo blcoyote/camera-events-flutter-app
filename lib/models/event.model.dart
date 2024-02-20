@@ -16,7 +16,7 @@ class EventModel {
     required this.hasClip,
     required this.hasSnapshot,
     required this.retainIndefinitely,
-    //this.data,
+    this.data,
     this.endTime,
     this.thumbnail,
     this.falsePositive,
@@ -26,7 +26,7 @@ class EventModel {
   });
 
   final String id;
-  //final DataModel data;
+  final DataModel? data;
   final String camera;
   final double? endTime;
   final double startTime;
@@ -41,9 +41,9 @@ class EventModel {
   final String? thumbnail;
   final List<String> zones;
 
-  factory EventModel.fromJson(Map<String, dynamic > json) => EventModel(
+  factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
         id: json["id"],
-        //data: dataModelFromJson(json["data"]),
+        data: DataModel.fromJson(json["data"]),
         camera: json["camera"],
         endTime: json["end_time"],
         startTime: json["start_time"],
@@ -71,15 +71,16 @@ class DataModel{
     this.score,
     this.topScore,
   });
-  final List<dynamic>? box;
-  final List<dynamic>? region;
+
+  final List<double>? box;
+  final List<double>? region;
   final double? score;
   final double? topScore;
   final String? type;
 
   factory DataModel.fromJson(Map<String, dynamic> json) => DataModel(
-    box: List<String>.from(json["box"].map((x) => x)),
-    region: List<String>.from(json["region"].map((x) => x)),
+    box: List<double>.from(json["box"].map((x) => x)),
+    region: List<double>.from(json["region"].map((x) => x)),
     score: json["score"],
     topScore: json["top_score"],
     type: json["type"]
