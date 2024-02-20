@@ -34,7 +34,7 @@ class EventModel {
   final String camera;
   final double? endTime;
   final double startTime;
-  final String? falsePositive;
+  final bool? falsePositive;
   final bool hasClip;
   final bool hasSnapshot;
   final String label;
