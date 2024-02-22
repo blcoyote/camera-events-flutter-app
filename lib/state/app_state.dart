@@ -133,6 +133,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> processLogin(String username, String password, Function errorCallback) async {
     loggingIn = true;
+    notifyListeners();
     try {
       TokenModel token = await UserService().login(username, password);
       await setToken(token.accessToken, token.refreshToken, username);
@@ -141,6 +142,7 @@ class AppState extends ChangeNotifier {
       errorCallback(e.toString());
     }
     loggingIn = false;
+    notifyListeners();
   }
 
   Future<void> processSilentLogin() async {
