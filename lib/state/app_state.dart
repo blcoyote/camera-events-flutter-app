@@ -18,7 +18,6 @@ class AppState extends ChangeNotifier {
   String _refreshToken = '';
   bool loadingApp = true;
   bool loggingIn = false;
-  String loginErrorMessage = '';
 
   // basic app state
   //late final FirebaseAnalytics analytics;
@@ -134,7 +133,6 @@ class AppState extends ChangeNotifier {
 
   Future<void> processLogin(String username, String password, Function errorCallback) async {
     loggingIn = true;
-    loginErrorMessage = '';
     try {
       TokenModel token = await UserService().login(username, password);
       await setToken(token.accessToken, token.refreshToken, username);
