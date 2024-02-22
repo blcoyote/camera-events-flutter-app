@@ -49,6 +49,7 @@ dependencies:
   firebase_analytics: ^10.4.3
   permission_handler: ^11.2.0
   open_file: ^3.3.2
+  get_it: ^7.6.7
 
 dev_dependencies:
   flutter_test:

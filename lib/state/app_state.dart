@@ -18,6 +18,7 @@ class AppState extends ChangeNotifier {
   String _refreshToken = '';
   bool loadingApp = true;
   bool loggingIn = false;
+  String loginErrorMessage = '';
 
   // basic app state
   //late final FirebaseAnalytics analytics;
@@ -131,24 +132,15 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> processLogin(BuildContext context, String username, String password) async {
+  Future<void> processLogin(String username, String password, Function errorCallback) async {
     loggingIn = true;
+    loginErrorMessage = '';
     try {
       TokenModel token = await UserService().login(username, password);
       await setToken(token.accessToken, token.refreshToken, username);
       getFcmToken();
     } catch (e) {
-      final error = e.toString();
-      final snackBar = SnackBar(
-        content: Text('Error logging in: $error'),
-        action: SnackBarAction(
-          label: 'Close',
-          onPressed: () {
-            // no action needed
-          },
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      errorCallback(e.toString());
     }
     loggingIn = false;
   }

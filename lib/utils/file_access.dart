@@ -11,7 +11,6 @@ Future<File> writeFile(Uint8List data, String name) async {
   if (!status.isGranted) {
     await Permission.storage.request();
   }
-  // TODO: IOS???
   // the downloads folder path
 
   String tempPath = downloadDir.path;

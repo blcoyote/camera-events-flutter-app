@@ -14,6 +14,23 @@ class LoginScreen extends StatelessWidget {
     final TextEditingController emailEditingController =
         TextEditingController();
 
+    loginError(String errorMessage) {
+      final snackBar = SnackBar(
+        content: Text('Error logging in: $errorMessage'),
+        action: SnackBarAction(
+          label: 'Close',
+          onPressed: () {
+            // no action needed
+          },
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    login() {
+      appState.processLogin(emailEditingController.text.trim(), passwordEditingController.text.trim(), loginError);
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -62,14 +79,11 @@ class LoginScreen extends StatelessWidget {
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',
-                        hintText: 'Enter secure password'),
+                        hintText: 'Enter password'),
                     keyboardType: TextInputType.visiblePassword,
                     textInputAction: TextInputAction.go,
                     onFieldSubmitted: (value) {
-                      appState.processLogin(
-                          context,
-                          emailEditingController.text.trim(),
-                          passwordEditingController.text.trim());
+                      login();
                     },
                   ),
                 ),
@@ -95,10 +109,7 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: MaterialButton(
                   onPressed: () {
-                    appState.processLogin(
-                        context,
-                        emailEditingController.text.trim(),
-                        passwordEditingController.text.trim());
+                    login();
                   },
                   child: appState.loggingIn
                       ? const CircularProgressIndicator()
@@ -117,6 +128,7 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+
     );
   }
 }
