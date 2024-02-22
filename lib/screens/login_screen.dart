@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
     final TextEditingController emailEditingController =
         TextEditingController();
 
-    loginError(String errorMessage) {
+    loginCallback(String errorMessage) {
       final snackBar = SnackBar(
         content: Text('Error logging in: $errorMessage'),
         action: SnackBarAction(
@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
     }
 
     login() {
-      appState.processLogin(emailEditingController.text.trim(), passwordEditingController.text.trim(), loginError);
+      appState.processLogin(emailEditingController.text.trim(), passwordEditingController.text.trim(), loginCallback);
     }
 
     return Scaffold(
